@@ -9,7 +9,7 @@ public class Game extends GraphicsProgram {
 
     private static final int WIDTH = 800;
     private static final int HEIGHT = 800;
-    private static final int FPS = 20;
+    private static final int FPS = 40;
 
     private static final int BRiCK_WIDTH = 50;
     private static final int BRiCK_HEIGHT = 20;
@@ -80,10 +80,12 @@ public class Game extends GraphicsProgram {
      */
     private void bounceBall() {
         if (ball.getX() < 0 || ball.getX()+ball.getWidth() > w) {
-            speedX *= -1;
+            if (speedX * FPS < 200) speedX *= -1.1;
+            else speedX *= 1;
         }
         if (ball.getY() < 0) {
-            speedY *= -1;
+            if (speedY * FPS < 200) speedY *= -1.1;
+            else speedY *= 1;;
         }
         if (checkColision(ball, racket)) {
             speedY *= -1;
