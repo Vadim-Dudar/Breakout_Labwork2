@@ -20,7 +20,7 @@ public class Game extends GraphicsProgram {
     private double speedY = 170;
     private boolean speedsConverted = false;
 
-    private static RandomGenerator generator = RandomGenerator.getInstance();
+    private static final RandomGenerator generator = RandomGenerator.getInstance();
 
     private double w, h;
     private GRect racket;
@@ -83,16 +83,22 @@ public class Game extends GraphicsProgram {
      */
     private void bounceBall() {
         if (ball.getX() < 0 || ball.getX()+ball.getWidth() > w) {
-            if (speedX * FPS < 200) speedX *= -1.1;
+            if (speedX * FPS < 190) speedX *= -1.1;
             else speedX *= 1;
+
+            playSound("bounce");
         }
         if (ball.getY() < 0) {
-            if (speedY * FPS < 200) speedY *= -1.1;
-            else speedY *= 1;;
+            if (speedY * FPS < 190) speedY *= -1.1;
+            else speedY *= 1;
+
+            playSound("bounce");
         }
         if (checkColision(ball, racket)) {
             speedY *= -1;
             if (speedX == 0) speedX = generator.nextInt(-170, 170) / (FPS*1.);
+
+            playSound("bounce");
         }
     }
 
@@ -136,7 +142,6 @@ public class Game extends GraphicsProgram {
      * Play a WAV sound file located in the user's downloads folder via
      * the Applet AudioClip API. The filename base (without .wav)
      * is provided as `soundName`.
-     *
      * Existing sound in project:
      *  - "victory" - Victory sound
      *  - "bounce" - ball bounce sound
