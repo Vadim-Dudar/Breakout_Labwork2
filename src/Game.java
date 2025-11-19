@@ -12,7 +12,7 @@ public class Game extends GraphicsProgram {
 
     private static final int WIDTH = 800;
     private static final int HEIGHT = 800;
-    private static final int FPS = 40;
+    private static final int FPS = 30; // 30 is
 
     private static final int BRiCK_WIDTH = 50;
     private static final int BRiCK_HEIGHT = 20;
@@ -26,14 +26,14 @@ public class Game extends GraphicsProgram {
     private GRect racket;
     private GOval ball;
 
-    public void run(){
+    public void run() {
         setSize(WIDTH, HEIGHT);
         setDefault();
         addMouseListeners();
 
         final int pauseMs = (int) Math.max(1, Math.round(1000.0 / FPS));
 
-        while (ball.getY()<h) {
+        while (ball.getY() < h) {
             moveBall();
             pause(pauseMs);
         }
@@ -46,7 +46,7 @@ public class Game extends GraphicsProgram {
      * @param e mouse event containing the current pointer coordinates
      */
     public void mouseMoved(MouseEvent e) {
-        racket.setLocation(e.getX()-BRiCK_WIDTH*0.75, racket.getY());
+        racket.setLocation(e.getX() - BRiCK_WIDTH * 0.75, racket.getY());
     }
 
     /**
@@ -58,45 +58,37 @@ public class Game extends GraphicsProgram {
      * @return a configured filled GOval representing the ball
      */
     private GOval GCircle(double x, double y, double r) {
-        GOval oval = new GOval(x-r, y-r, 2*r, 2*r);
+        GOval oval = new GOval(x - r, y - r, 2 * r, 2 * r);
         oval.setFilled(true);
         oval.setFillColor(Color.BLACK);
         return oval;
     }
 
     /**
-     * Advances the ball position by current per-frame speed components
-     * and performs collision/bounce handling.
-     * Speeds are in pixels per frame.
+     * Moves the ball by the current per-frame velocity and handles bounces.
+     *
+     * - Movement: translates the ball by (speedX, speedY) where both are in pixels/frame.
+     * - Wall collisions: invert horizontal speed on left/right walls; invert vertical
+     *   speed on the top wall.
+     * - Racket collision: invert vertical speed; if horizontal speed is zero, assign a
+     *   random non-zero horizontal speed (70..170 px/sec converted to px/frame).
+     * - Side effect: plays the "bounce" sound on any bounce.
      */
-    private void moveBall(){
-        ball.setLocation(ball.getX()+speedX, ball.getY()+speedY);
-        bounceBall();
-    }
+    private void moveBall() {
+        ball.setLocation(ball.getX() + speedX, ball.getY() + speedY);
 
-    /**
-     * Handles collisions of the ball with the window edges and the racket.
-     * Reverses horizontal speed when hitting left/right walls and reverses
-     * vertical speed when hitting the top. If the ball collides with the racket
-     * the vertical direction is inverted and a (possibly random) horizontal
-     * speed is applied when current horizontal speed is zero.
-     */
-    private void bounceBall() {
-        if (ball.getX() < 0 || ball.getX()+ball.getWidth() > w) {
-            if (speedX * FPS < 190) speedX *= -1.1;
-            else speedX *= 1;
+        if (ball.getX() <= 0 || ball.getX() + ball.getWidth() >= w) {
+            speedX *= -1;
 
             playSound("bounce");
         }
-        if (ball.getY() < 0) {
-            if (speedY * FPS < 190) speedY *= -1.1;
-            else speedY *= 1;
-
+        if (ball.getY() <= 0) {
+            speedY *= -1;
             playSound("bounce");
         }
         if (checkColision(ball, racket)) {
             speedY *= -1;
-            if (speedX == 0) speedX = generator.nextInt(-170, 170) / (FPS*1.);
+            if (speedX == 0) speedX = generator.nextInt(70, 170) / (FPS * 1.);
 
             playSound("bounce");
         }
@@ -121,19 +113,20 @@ public class Game extends GraphicsProgram {
      * before the main loop runs.
      */
     private void setDefault() {
-        w = getWidth(); h = getHeight();
+        w = getWidth();
+        h = getHeight();
         if (!speedsConverted) {
             speedX = speedX / FPS;
             speedY = speedY / FPS;
             speedsConverted = true;
         }
 
-        racket = new GRect(w-BRiCK_WIDTH*0.75, h-70, BRiCK_WIDTH*1.5, BRiCK_HEIGHT);
+        racket = new GRect(w - BRiCK_WIDTH * 0.75, h - 70, BRiCK_WIDTH * 1.5, BRiCK_HEIGHT);
         racket.setFilled(true);
         racket.setFillColor(Color.BLACK);
         add(racket);
 
-        ball = GCircle(w/2, h-250, BRiCK_HEIGHT);
+        ball = GCircle(w / 2, h - 250, BRiCK_HEIGHT);
         add(ball);
     }
 
@@ -143,16 +136,16 @@ public class Game extends GraphicsProgram {
      * the Applet AudioClip API. The filename base (without .wav)
      * is provided as `soundName`.
      * Existing sound in project:
-     *  - "victory" - Victory sound
-     *  - "bounce" - ball bounce sound
-     *  - "brick" - break brick sound
-     *  - "build" - sound of brick building
+     * - "victory" - Victory sound
+     * - "bounce" - ball bounce sound
+     * - "brick" - break brick sound
+     * - "build" - sound of brick building
      *
      * @param soundName base filename of the WAV
      */
     private void playSound(String soundName) {
         try {
-            java.net.URL url = new java.io.File("media\\"+soundName+".wav").toURI().toURL();
+            java.net.URL url = new java.io.File("media\\" + soundName + ".wav").toURI().toURL();
             AudioClip sound = Applet.newAudioClip(url);
             sound.play();
         } catch (java.net.MalformedURLException e) {
