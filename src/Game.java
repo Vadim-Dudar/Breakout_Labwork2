@@ -31,6 +31,7 @@ public class Game extends GraphicsProgram {
 
     public void run() {
         setSize(WIDTH, HEIGHT);
+        brickManager = new BrickManager(WIDTH, HEIGHT);
         setDefault();
         addMouseListeners();
 
@@ -140,7 +141,6 @@ public class Game extends GraphicsProgram {
         ball = GCircle(w / 2, h - 250, BRiCK_HEIGHT);
         add(ball);
 
-        brickManager = new BrickManager();
         brickManager.initBricks(this);
 
     }

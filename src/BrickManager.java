@@ -6,12 +6,23 @@ import java.awt.*;
 public class BrickManager {
 
     // Brick constants
-    private static final int BRICK_WIDTH = 75;   // width of a single brick in pixels
     private static final int BRICK_HEIGHT = 20;  // height of a single brick in pixels
     private static final int ROWS = 5;           // number of brick rows
     private static final int COLS = 10;          // number of brick columns
     private static final int GAP_X = 5;
     private static final int GAP_Y = 8;
+
+    private final int APPLICATION_WIDTH;
+    private final int APPLICATION_HEIGHT;
+    private int BRICK_WIDTH;
+
+    public BrickManager(int APPLICATION_WIDTH, int APPLICATION_HEIGHT) {
+        this.APPLICATION_WIDTH = APPLICATION_WIDTH;
+        this.APPLICATION_HEIGHT = APPLICATION_HEIGHT;
+
+        // Adaptive brick width
+        this.BRICK_WIDTH = (APPLICATION_WIDTH - (COLS - 1) * GAP_X) / COLS;
+    }
 
     /**
      * Creates and adds bricks to the given GraphicsProgram canvas.
