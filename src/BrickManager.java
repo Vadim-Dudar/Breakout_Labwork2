@@ -6,10 +6,12 @@ import java.awt.*;
 public class BrickManager {
 
     // Brick constants
-    private static final int BRICK_WIDTH = 60;   // width of a single brick in pixels
+    private static final int BRICK_WIDTH = 75;   // width of a single brick in pixels
     private static final int BRICK_HEIGHT = 20;  // height of a single brick in pixels
     private static final int ROWS = 5;           // number of brick rows
     private static final int COLS = 10;          // number of brick columns
+    private static final int GAP_X = 5;
+    private static final int GAP_Y = 8;
 
     /**
      * Creates and adds bricks to the given GraphicsProgram canvas.
@@ -19,14 +21,26 @@ public class BrickManager {
     public void initBricks(GraphicsProgram gp) {
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
-                GRect brick = new GRect(
-                        col * (BRICK_WIDTH + 5) + 50,
-                        row * (BRICK_HEIGHT + 5) + 100,
-                        BRICK_WIDTH,
-                        BRICK_HEIGHT
-                );
+                GRect brick = new GRect(col * (BRICK_WIDTH + GAP_X), row * (BRICK_HEIGHT + GAP_Y) + 100, BRICK_WIDTH, BRICK_HEIGHT);
                 brick.setFilled(true);
-                brick.setFillColor(Color.BLUE);
+
+                switch (row % 5) {
+                    case 0:
+                        brick.setFillColor(Color.RED);
+                        break;
+                    case 1:
+                        brick.setFillColor(Color.ORANGE);
+                        break;
+                    case 2:
+                        brick.setFillColor(Color.YELLOW);
+                        break;
+                    case 3:
+                        brick.setFillColor(Color.GREEN);
+                        break;
+                    case 4:
+                        brick.setFillColor(Color.CYAN);
+                        break;
+                }
                 gp.add(brick);
             }
         }
