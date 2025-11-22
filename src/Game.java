@@ -17,7 +17,7 @@ public class Game extends GraphicsProgram {
     private static final int BRiCK_WIDTH = 50;
     private static final int BRiCK_HEIGHT = 20;
     private double speedX = 0;
-    private double speedY = 170;
+    private double speedY = 300;
     private boolean speedsConverted = false;
 
     private static final RandomGenerator generator = RandomGenerator.getInstance();
@@ -25,6 +25,9 @@ public class Game extends GraphicsProgram {
     private double w, h;
     private GRect racket;
     private GOval ball;
+
+    private BrickManager brickManager;
+
 
     public void run() {
         setSize(WIDTH, HEIGHT);
@@ -92,6 +95,14 @@ public class Game extends GraphicsProgram {
 
             playSound("bounce");
         }
+
+        GRect hitBrick = brickManager.checkCollision(ball, this, racket.getY());
+        if (hitBrick != null) {
+            speedY *= -1;
+            brickManager.removeBrick(hitBrick, this);
+            playSound("brick");
+        }
+
     }
 
     /**
@@ -128,6 +139,10 @@ public class Game extends GraphicsProgram {
 
         ball = GCircle(w / 2, h - 250, BRiCK_HEIGHT);
         add(ball);
+
+        brickManager = new BrickManager();
+        brickManager.initBricks(this);
+
     }
 
 
